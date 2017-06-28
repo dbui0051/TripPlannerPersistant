@@ -6,7 +6,7 @@ var Activity = require('../models').Activity;
 var Day = require('../models').Day;
 
 router.get('/', function(req, res, next) {
-  Day.findAll( )
+  Day.findAll({})
   .then(days => {
   	console.log('Getting all days', days)
     res.json(days)
