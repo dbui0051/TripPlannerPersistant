@@ -76,9 +76,24 @@ var dayModule = (function () {
     $dayTitle.text('Day ' + this.number);
     // attractions UI
     function show (attraction) { attraction.show(); }
-    if (this.hotel) show(this.hotel);
-    this.restaurants.forEach(show);
-    this.activities.forEach(show);
+    // if (this.hotel) show(this.hotel);
+    // this.restaurants.forEach(show);
+    // this.activities.forEach(show);
+
+    let currentHotel
+    $.get('/api/days/' + this.number)
+    .then(day => {
+      currentHotel = attractionsModule.getByTypeAndId('hotel', day.hotelId)
+      if (currentHotel) show(currentHotel)
+      day.restaurants.forEach(restaurant => {
+        show(attractionsModule.getByTypeAndId('restaurant', restaurant.id))
+      })
+      day.activities.forEach(activity => {
+        show(attractionsModule.getByTypeAndId('activity', activity.id))
+      })
+    })
+
+
   };
 
   Day.prototype.hide = function () {
@@ -87,9 +102,10 @@ var dayModule = (function () {
     $dayTitle.text('Day not Loaded');
     // attractions UI
     function hide (attraction) { attraction.hide(); }
-    if (this.hotel) hide(this.hotel);
-    this.restaurants.forEach(hide);
-    this.activities.forEach(hide);
+    // if (this.hotel) hide(this.hotel);
+    // this.restaurants.forEach(hide);
+    // this.activities.forEach(hide);
+
   };
 
 

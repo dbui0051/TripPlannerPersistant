@@ -15,7 +15,7 @@ router.get('/', function(req, res, next) {
 })
 
 router.get('/:id', function(req, res, next) {
-  Day.findOne({where:{number:req.params.id}})
+  Day.findOne({where: {number: req.params.id}, include: [Hotel, Restaurant, Activity]})
   .then(foundDay => {
     res.json(foundDay)
   })
@@ -83,7 +83,7 @@ router.put('/:id/hotel', function(req, res, next) {
 })
 
 router.put('/:id/restaurant', function(req, res, next) {
-  Day.findOne({where: {id: req.params.id}, include: [{model: Restaurant}]})
+  Day.findOne({where: {number: req.params.id}, include: [{model: Restaurant}]})
   .then(foundDay => {
     foundDay.removeRestaurant(req.body.attractionId)
   })
@@ -94,7 +94,7 @@ router.put('/:id/restaurant', function(req, res, next) {
 })
 
 router.put('/:id/activity', function(req, res, next) {
-  Day.findOne({where: {id: req.params.id}, include: [{model: Activity}]})
+  Day.findOne({where: {number: req.params.id}, include: [{model: Activity}]})
   .then(foundDay => {
     foundDay.removeActivity(req.body.attractionId);
   })
