@@ -38,29 +38,37 @@ router.delete('/:id', function(req, res, next) {
   .catch(next)
 })
 
-router.post('/:id/hotels', function(req, res, next) {
+router.post('/:id/hotel', function(req, res, next) {
   Day.findOne({where: {id: req.params.id}, include: [{model: Hotel}]})
   .then(foundDay => {
-    res.json(foundDay)
+    return foundDay.update({hotelId: req.body.attractionId})
+  })
+  .then(() => {
+    res.sendStatus(201)
   })
   .catch(next)
 })
 
-router.post('/:id/restaurants', function(req, res, next) {
+router.post('/:id/restaurant', function(req, res, next) {
   Day.findOne({where: {id: req.params.id}, include: [{model: Restaurant}]})
   .then(foundDay => {
-    res.json(foundDay)
+    foundDay.addRestaurant(req.body.attractionId)
+  })
+  .then(() => {
+    res.sendStatus(201)
   })
   .catch(next)
 })
 
-router.post('/:id/activities', function(req, res, next) {
-  // Day.findOne({where: {id: req.params.id}, include: [{model: Activity}]})
-  // .then(foundDay => {
-  //   res.json(foundDay)
-  // })
-  // .catch(next)
-  res.json(req.params.id);
+router.post('/:id/activity', function(req, res, next) {
+  Day.findOne({where: {id: req.params.id}, include: [{model: Activity}]})
+  .then(foundDay => {
+    foundDay.addActivity(req.body.attractionId)
+  })
+  .then(() => {
+    res.sendStatus(201)
+  })
+  .catch(next)
 })
 
 router.put('/:id/hotels', function(req, res, next) {
