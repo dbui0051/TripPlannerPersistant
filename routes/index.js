@@ -1,8 +1,10 @@
 var Promise = require('bluebird');
 var router = require('express').Router();
+var routes = require('./days')
 var Hotel = require('../models').Hotel;
 var Restaurant = require('../models').Restaurant;
 var Activity = require('../models').Activity;
+var Day = require('../models').Day;
 
 router.get('/', function(req, res, next) {
   Promise.all([
@@ -45,4 +47,12 @@ router.get('/api/activities', function(req, res, next) {
       .catch(next);
 });
 
+router.use('/api/days', routes)
+
 module.exports = router;
+
+
+
+
+
+
