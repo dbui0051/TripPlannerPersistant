@@ -23,7 +23,7 @@ router.get('/:id', function(req, res, next) {
 })
 
 router.post('/', function(req, res, next) {
-  Day.create()
+  Day.create({number: req.body.number})
   .then(createdDay => {
     res.json(createdDay)
   })
@@ -31,7 +31,7 @@ router.post('/', function(req, res, next) {
 })
 
 router.delete('/:id', function(req, res, next) {
-  Day.destroy({where: {id: req.params.id}})
+  Day.destroy({where: {number: req.params.id}})
   .then(deletedDay => {
     res.json(deletedDay)
   })
