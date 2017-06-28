@@ -55,11 +55,12 @@ router.post('/:id/restaurants', function(req, res, next) {
 })
 
 router.post('/:id/activities', function(req, res, next) {
-  Day.findOne({where: {id: req.params.id}, include: [{model: Activity}]})
-  .then(foundDay => {
-    res.json(foundDay)
-  })
-  .catch(next)
+  // Day.findOne({where: {id: req.params.id}, include: [{model: Activity}]})
+  // .then(foundDay => {
+  //   res.json(foundDay)
+  // })
+  // .catch(next)
+  res.json(req.params.id);
 })
 
 router.put('/:id/hotels', function(req, res, next) {
