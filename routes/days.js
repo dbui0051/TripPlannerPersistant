@@ -6,16 +6,16 @@ var Activity = require('../models').Activity;
 var Day = require('../models').Day;
 
 router.get('/', function(req, res, next) {
-  Day.findAll({})
+  Day.findAll({ include: [Hotel, Restaurant, Activity]})
   .then(days => {
-  	console.log('Getting all days', days)
+  	// console.log('Getting all days', days)
     res.json(days)
   })
   .catch(next)
 })
 
 router.get('/:id', function(req, res, next) {
-  Day.findById(req.params.id)
+  Day.findOne({where:{number:req.params.id}})
   .then(foundDay => {
     res.json(foundDay)
   })
@@ -39,7 +39,7 @@ router.delete('/:id', function(req, res, next) {
 })
 
 router.post('/:id/hotel', function(req, res, next) {
-  Day.findOne({where: {id: req.params.id}, include: [{model: Hotel}]})
+  Day.findOne({where: {number: req.params.id}, include: [{model: Hotel}]})
   .then(foundDay => {
     return foundDay.update({hotelId: req.body.attractionId})
   })
@@ -50,7 +50,7 @@ router.post('/:id/hotel', function(req, res, next) {
 })
 
 router.post('/:id/restaurant', function(req, res, next) {
-  Day.findOne({where: {id: req.params.id}, include: [{model: Restaurant}]})
+  Day.findOne({where: {number: req.params.id}, include: [{model: Restaurant}]})
   .then(foundDay => {
     foundDay.addRestaurant(req.body.attractionId)
   })
@@ -61,7 +61,7 @@ router.post('/:id/restaurant', function(req, res, next) {
 })
 
 router.post('/:id/activity', function(req, res, next) {
-  Day.findOne({where: {id: req.params.id}, include: [{model: Activity}]})
+  Day.findOne({where: {number: req.params.id}, include: [{model: Activity}]})
   .then(foundDay => {
     foundDay.addActivity(req.body.attractionId)
   })
@@ -71,8 +71,8 @@ router.post('/:id/activity', function(req, res, next) {
   .catch(next)
 })
 
-router.put('/:id/hotels', function(req, res, next) {
-  Day.findOne({where: {id: req.params.id}, include: [{model: Hotel}]})
+router.put('/:id/hotel', function(req, res, next) {
+  Day.findOne({where: {number: req.params.id}, include: [{model: Hotel}]})
   .then(foundDay => {
     return foundDay.update({hotelId: null})
   })
@@ -82,26 +82,26 @@ router.put('/:id/hotels', function(req, res, next) {
   .catch(next)
 })
 
-// router.put('/:id/restaurants', function(req, res, next) {
-//   Day.findOne({where: {id: req.params.id}, include: [{model: Restaurant}]})
-//   .then(foundDay => {
-//     return foundDay.update({restaurantId: null})
-//   })
-//   .then(updatedDay => {
-//     res.json(updatedDay)
-//   })
-//   .catch(next)
-// })
+router.put('/:id/restaurant', function(req, res, next) {
+  Day.findOne({where: {id: req.params.id}, include: [{model: Restaurant}]})
+  .then(foundDay => {
+    foundDay.removeRestaurant(req.body.attractionId)
+  })
+  .then(() => {
+    res.sendStatus(202)
+  })
+  .catch(next)
+})
 
-// router.put('/:id/activities', function(req, res, next) {
-//   Day.findOne({where: {id: req.params.id}, include: [{model: Activity}]})
-//   .then(foundDay => {
-//     return foundDay.update({activityId: null})
-//   })
-//   .then(updatedDay => {
-//     res.json(updatedDay)
-//   })
-//   .catch(next)
-// })
+router.put('/:id/activity', function(req, res, next) {
+  Day.findOne({where: {id: req.params.id}, include: [{model: Activity}]})
+  .then(foundDay => {
+    foundDay.removeActivity(req.body.attractionId);
+  })
+  .then(() => {
+    res.sendStatus(202);
+  })
+  .catch(next)
+})
 
 module.exports = router
