@@ -62,4 +62,37 @@ router.post('/:id/activities', function(req, res, next) {
   .catch(next)
 })
 
+router.put('/:id/hotels', function(req, res, next) {
+  Day.findOne({where: {id: req.params.id}, include: [{model: Hotel}]})
+  .then(foundDay => {
+    return foundDay.update({hotelId: null})
+  })
+  .then(updatedDay => {
+    res.json(updatedDay)
+  })
+  .catch(next)
+})
+
+// router.put('/:id/restaurants', function(req, res, next) {
+//   Day.findOne({where: {id: req.params.id}, include: [{model: Restaurant}]})
+//   .then(foundDay => {
+//     return foundDay.update({restaurantId: null})
+//   })
+//   .then(updatedDay => {
+//     res.json(updatedDay)
+//   })
+//   .catch(next)
+// })
+
+// router.put('/:id/activities', function(req, res, next) {
+//   Day.findOne({where: {id: req.params.id}, include: [{model: Activity}]})
+//   .then(foundDay => {
+//     return foundDay.update({activityId: null})
+//   })
+//   .then(updatedDay => {
+//     res.json(updatedDay)
+//   })
+//   .catch(next)
+// })
+
 module.exports = router
